@@ -96,12 +96,30 @@
 <p>​    我们首先从增删查改的demo来入门，hello world就不赘述了。首先你需要配置一个数据库进行数据的增删查改。这里我推荐如今的主流数据库MySQL，具体可以参考<code>菜鸟教程</code><a href="https://www.runoob.com/mysql/mysql-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/mysql/mysql-tutorial.html</a> 进行安装。</p>
 <p>​    安装MySQL后导入<code>users.sql</code> <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/blob/master/springboot_mybatis_xml/users.sql" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/blob/master/springboot_mybatis_xml/users.sql</a> 到MySQL的<code>test</code>数据库来建表，具体可以使用MySQL命令行、Navicat、MySQL workbench来导入，推荐使用前两种方式。</p>
 <p>​    之后使用idea来生成Spring Boot，参考链接  <a href="http://blog.didispace.com/spring-boot-learning-21-1-1/" target="_blank" rel="noopener">http://blog.didispace.com/spring-boot-learning-21-1-1/</a> </p>
-<p>​    创建文件之后的各个文件夹截图<img src="http://i2.tiimg.com/703764/85001522bf4284f9.png" alt="http://i2.tiimg.com/703764/85001522bf4284f9.png"></p>
+<p>​    创建Spring Boot后的src（source）源代码文件夹如图所示：</p>
+<p><img src="http://i2.tiimg.com/703764/85001522bf4284f9.png" alt="http://i2.tiimg.com/703764/85001522bf4284f9.png"></p>
+<p>一般src中写代码的顺序为：</p>
+<p>1.model层，模型层，该层中每一个类对应数据库中的一个表</p>
+<p>2.mapper层，数据访问层，也被称为DAO(Data Access Object)层，该层中都是接口，一个接口对应一个model，用来操作model。接口中的方法一般有对应数据库的SELECT，DELETE，INSERT，UPDATE方法，就是普通的增删查改，俗称<code>CRUD</code>。该层可以说是Spring中<code>IoC</code>最直观的体现，只需定义接口，无需提供具体的实现类，Spring中的IoC会自动为其注入依赖。具体对Spring中<code>Ioc</code>、<code>DI</code>、<code>Aop</code>等的理解可以参考<code>《spring揭秘》</code>这本书，在此不予多做讨论。</p>
+<p>3.web层，也被称为Controller（控制层），用于提供前端访问后端的接口（这里的接口是指URL）。一般写好了程序也可用Controller来测试，不过更常用的方法是写单元测试的代码，这样方便快捷，不需要每次都一个个接口地测试。</p>
+<p>至于enums文件夹只是我的项目特有的文件夹，就只有一个枚举类。SprinbootMybatisXmlApplication类是项目的配置和启动类，Spring Boot中还有许多可能令你莫名其妙的注解，具体注解的作用和使用方式可以参考<code>Spring Boot官方文档</code> <a href="https://www.breakyizhan.com/springboot/3091.html" target="_blank" rel="noopener">https://www.breakyizhan.com/springboot/3091.html</a> 。</p>
+<p>接下来再来看看resourc（资源）文件夹</p>
+<p><img src="http://i1.fuimg.com/703764/5432c727d99e8aeb.png" alt="http://i1.fuimg.com/703764/5432c727d99e8aeb.png"></p>
+<p>mybatis-config.xml是mybatis的配置类，里面主要定义了类型的别名。UserMapper.xml是对应src文件夹的mapper层的UserMapper接口，用来提供该接口中每个方法的xml（也就是SQL语句）的实现。application.properties是应用的配置类，主要有spring和mybatis的相关配置。</p>
+<p>在src文件夹和resource文件夹还有值得我们关注的pom.xml文件</p>
+<p><img src="http://i2.tiimg.com/703764/8e1f9dc0e2b4865e.png" alt="pom.xml"></p>
+<p>该文件主要作用是配置Spring Boot的相关依赖，一般我们如果在创建Spring Boot的时候勾选了web，该文件在本次项目中就可以不予理会了。不过如果没勾选web也不急，我们可以在dependency中添加web依赖</p>
+<p><img src="http://i2.tiimg.com/703764/18334c65e0c8c0bf.png" alt="web依赖"></p>
+<p>一般写代码的文件顺序为pom.xml–&gt;application.properties–&gt;model–&gt;mapper–&gt;mybatis.mapper–&gt;web，按上面的顺序照着github上的源代码撸一下就大功告成了。最后启动SpringbootXmlApplication类就可以在浏览器按着localhost:8080/getUsers等URL对每个方法就行测试了。</p>
+<p><img src="http://i1.fuimg.com/703764/4d51dea1112c5a5f.png" alt="getUsers"></p>
+<p>URL对应RequestMapping注解中的字符串而不是下面的方法名称哦。</p>
+<p>当然如果你并不想一个个地用URL测试也可以编写单元测试，照着源代码中的test文件夹撸代码然后在对应测试类文件夹中运行该类就可以了。</p>
+<p><img src="http://i2.tiimg.com/703764/f2b418caecdcf8c9.png" alt="test"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck30caukb00028ow47q3k0bcu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck30ys2qc0002ssw44hax4no3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -139,7 +157,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/14/hello-world/" data-id="ck30cauk200018ow457cfeen9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/14/hello-world/" data-id="ck30ys2q60000ssw4h6py2jj3" class="article-share-link">Share</a>
       
       
     </footer>
