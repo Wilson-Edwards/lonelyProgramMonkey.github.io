@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SpringBoot集成lombok和配置yml | 沧海一粟可为舟的个人技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SpringBoot集成lombok和配置yml​    本次小编为大家带来lombok和yml，这两个都是能简化代码的利器。 此次的程序编写顺序依然是users.sql–&amp;gt;pom.xml–&amp;gt;application.yml–&amp;gt;src–&amp;gt;resource。 ​    首先是导入users.sql建表，或者用命令行照着敲。 ​    然后是pom.xml，在创建项目时配置依赖时">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot集成lombok和配置yml">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml&#x2F;index.html">
+<meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
+<meta property="og:description" content="SpringBoot集成lombok和配置yml​    本次小编为大家带来lombok和yml，这两个都是能简化代码的利器。 此次的程序编写顺序依然是users.sql–&amp;gt;pom.xml–&amp;gt;application.yml–&amp;gt;src–&amp;gt;resource。 ​    首先是导入users.sql建表，或者用命令行照着敲。 ​    然后是pom.xml，在创建项目时配置依赖时">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;i1.fuimg.com&#x2F;703764&#x2F;47ac13c32433a959.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i1.fuimg.com&#x2F;703764&#x2F;466dbdcf67559018.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i1.fuimg.com&#x2F;703764&#x2F;f51a18dc4fd94bb6.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i1.fuimg.com&#x2F;703764&#x2F;81e27c96955a8e6c.png">
+<meta property="og:updated_time" content="2019-11-18T01:16:50.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;i1.fuimg.com&#x2F;703764&#x2F;47ac13c32433a959.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">沧海一粟可为舟的个人技术博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">专注Java后端技术分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/tags/SpringBoot">SpringBoot</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-SpringBoot集成lombok和配置yml" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" class="article-date">
+  <time datetime="2019-11-17T14:47:19.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SpringBoot集成lombok和配置yml
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringBoot集成lombok和配置yml"><a href="#SpringBoot集成lombok和配置yml" class="headerlink" title="SpringBoot集成lombok和配置yml"></a>SpringBoot集成lombok和配置yml</h1><p>​    本次小编为大家带来lombok和yml，这两个都是能简化代码的利器。</p>
+<p>此次的程序编写顺序依然是users.sql–&gt;pom.xml–&gt;application.yml–&gt;src–&gt;resource。</p>
+<p>​    首先是导入users.sql建表，或者用命令行照着敲。</p>
+<p>​    然后是pom.xml，在创建项目时配置依赖时要勾选web，MySQL，mybatis framework。本次由于没有勾选mybtis framework，导致出了一系列bug。</p>
+<p>​    之后你需要使用Ctrl+Alt+S转到设置然后在plugin里面安装lombok。安装lombok插件后还要在pom.xml添加lombok依赖</p>
+<p><img src="http://i1.fuimg.com/703764/47ac13c32433a959.png" alt="http://i1.fuimg.com/703764/47ac13c32433a959.png"></p>
+<p>   添加好lombok依赖后就是application.yml的配置了。本次尝试了使用application.yml来替代application.properties，写出来的配置看起来的确清爽许多，当然实际内容并没有变化。</p>
+<p><img src="http://i1.fuimg.com/703764/466dbdcf67559018.png" alt="http://i1.fuimg.com/703764/466dbdcf67559018.png"></p>
+<p>  <strong>小技巧：当url过长时可以使用字符串然后用反斜杠<code>\</code>来进行换行</strong></p>
+<p>   之后就是model中的User类，在这里我们使用了lombok，通过@Data注解省略了getter、setter、ToString等方法的书写，lombok在编译期会自动帮我们加上这些方法。其背后的原理是使用自定义注解让编译器在处理注解后修改源代码来生成对应的class文件。</p>
+<p><img src="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png" alt="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png"></p>
+<p>​    在这里再贴一波官方文档地址– <a href="https://projectlombok.org/features/all" target="_blank" rel="noopener">https://projectlombok.org/features/all</a> </p>
+<p>​    我们来看下源代码在使用了lombok后能简洁到什么程度</p>
+<p><img src="http://i1.fuimg.com/703764/81e27c96955a8e6c.png" alt="http://i1.fuimg.com/703764/81e27c96955a8e6c.png"></p>
+<p>​    可以看到我们每个属性的getter、setter，还有ToString方法都不用书写了。虽然说ide一般都会有Alt+Insert快捷键帮我们生成这些方法，但是使用lombok可以使代码更加简洁，而且修改属性时会更加方便，不需要再删除掉那些方法重新生成。简直java后端程序猿的一大神器！</p>
+<p>​    本次的代码讲解到此结束，有兴趣的小伙伴不妨分屏照着我的源码一边看一边敲，这样可以减少bug的出现率（虽然肯定避免不了写bug，这时候就只能请出google了）。在这里再安利一下chrome的Octotree插件，可以在github的仓库中生成目录树，极大地方便了代码的查看。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck33qo985000048w41sle9h62" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">springboot零基础入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/SpringBoot/" style="font-size: 10px;">SpringBoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/14/hello-world/">沧海一粟可为舟的专属个人技术博客，用于Java后端个人笔记和技术分享</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 lin qx<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags/SpringBoot" class="mobile-nav-link">SpringBoot</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

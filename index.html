@@ -65,6 +65,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-SpringBoot集成lombok和配置yml" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" class="article-date">
+  <time datetime="2019-11-17T14:47:19.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringBoot集成lombok和配置yml"><a href="#SpringBoot集成lombok和配置yml" class="headerlink" title="SpringBoot集成lombok和配置yml"></a>SpringBoot集成lombok和配置yml</h1><p>​    本次小编为大家带来lombok和yml，这两个都是能简化代码的利器。</p>
+<p>此次的程序编写顺序依然是users.sql–&gt;pom.xml–&gt;application.yml–&gt;src–&gt;resource。</p>
+<p>​    首先是导入users.sql建表，或者用命令行照着敲。</p>
+<p>​    然后是pom.xml，在创建项目时配置依赖时要勾选web，MySQL，mybatis framework。本次由于没有勾选mybtis framework，导致出了一系列bug。</p>
+<p>​    之后你需要使用Ctrl+Alt+S转到设置然后在plugin里面安装lombok。安装lombok插件后还要在pom.xml添加lombok依赖</p>
+<p><img src="http://i1.fuimg.com/703764/47ac13c32433a959.png" alt="http://i1.fuimg.com/703764/47ac13c32433a959.png"></p>
+<p>   添加好lombok依赖后就是application.yml的配置了。本次尝试了使用application.yml来替代application.properties，写出来的配置看起来的确清爽许多，当然实际内容并没有变化。</p>
+<p><img src="http://i1.fuimg.com/703764/466dbdcf67559018.png" alt="http://i1.fuimg.com/703764/466dbdcf67559018.png"></p>
+<p>  <strong>小技巧：当url过长时可以使用字符串然后用反斜杠<code>\</code>来进行换行</strong></p>
+<p>   之后就是model中的User类，在这里我们使用了lombok，通过@Data注解省略了getter、setter、ToString等方法的书写，lombok在编译期会自动帮我们加上这些方法。其背后的原理是使用自定义注解让编译器在处理注解后修改源代码来生成对应的class文件。</p>
+<p><img src="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png" alt="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png"></p>
+<p>​    在这里再贴一波官方文档地址– <a href="https://projectlombok.org/features/all" target="_blank" rel="noopener">https://projectlombok.org/features/all</a> </p>
+<p>​    我们来看下源代码在使用了lombok后能简洁到什么程度</p>
+<p><img src="http://i1.fuimg.com/703764/81e27c96955a8e6c.png" alt="http://i1.fuimg.com/703764/81e27c96955a8e6c.png"></p>
+<p>​    可以看到我们每个属性的getter、setter，还有ToString方法都不用书写了。虽然说ide一般都会有Alt+Insert快捷键帮我们生成这些方法，但是使用lombok可以使代码更加简洁，而且修改属性时会更加方便，不需要再删除掉那些方法重新生成。简直java后端程序猿的一大神器！</p>
+<p>​    本次的代码讲解到此结束，有兴趣的小伙伴不妨分屏照着我的源码一边看一边敲，这样可以减少bug的出现率（虽然肯定避免不了写bug，这时候就只能请出google了）。在这里再安利一下chrome的Octotree插件，可以在github的仓库中生成目录树，极大地方便了代码的查看。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck33qo985000048w41sle9h62" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-springboot零基础入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" class="article-date">
@@ -124,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck3342iyr0002v0w4bkw3d78t" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck33qo98b000248w40fwyge4c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -162,7 +216,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/14/hello-world/" data-id="ck3342iyl0000v0w4eagk34p2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/14/hello-world/" data-id="ck33qo98e000448w4dhjf6dh3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,6 +276,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
+          </li>
         
           <li>
             <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
