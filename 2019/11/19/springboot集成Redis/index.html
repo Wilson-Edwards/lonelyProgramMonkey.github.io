@@ -5,15 +5,17 @@
   
 
   
-  <title>沧海一粟可为舟的个人技术博客</title>
+  <title>springboot集成Redis | 沧海一粟可为舟的个人技术博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="lonelyProgramMonkey">
-<meta property="og:type" content="website">
-<meta property="og:title" content="沧海一粟可为舟的个人技术博客">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
+  <meta name="description" content="本次小编为大家带来Redis的集成使用。Redis是什么呢？Redis是一个NoSQL数据库，其实就是存储键值对的内存数据库，一般用于做缓存。 ​    首先我们需要安装Redis，Redis的安装参考菜鸟教程  https:&#x2F;&#x2F;www.runoob.com&#x2F;redis&#x2F;redis-install.html ，不过Redis服务的运行我们不必要使用命令行，双击redis-server.exe就可以">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot集成Redis">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;19&#x2F;springboot%E9%9B%86%E6%88%90Redis&#x2F;index.html">
 <meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
-<meta property="og:description" content="lonelyProgramMonkey">
+<meta property="og:description" content="本次小编为大家带来Redis的集成使用。Redis是什么呢？Redis是一个NoSQL数据库，其实就是存储键值对的内存数据库，一般用于做缓存。 ​    首先我们需要安装Redis，Redis的安装参考菜鸟教程  https:&#x2F;&#x2F;www.runoob.com&#x2F;redis&#x2F;redis-install.html ，不过Redis服务的运行我们不必要使用命令行，双击redis-server.exe就可以">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-19T14:35:06.524Z">
 <meta name="twitter:card" content="summary">
   
   
@@ -63,9 +65,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-springboot集成Redis" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-springboot集成Redis" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" class="article-date">
   <time datetime="2019-11-19T13:46:44.000Z" itemprop="datePublished">2019-11-19</time>
@@ -78,8 +78,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/">springboot集成Redis</a>
+    <h1 class="article-title" itemprop="name">
+      springboot集成Redis
     </h1>
   
 
@@ -136,136 +136,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-SpringBoot集成lombok和配置yml" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" class="article-date">
-  <time datetime="2019-11-17T14:47:19.000Z" itemprop="datePublished">2019-11-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
-    </h1>
+    <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SpringBoot集成lombok和配置yml</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>​    本次小编为大家带来lombok和yml，这两个都是能简化代码的利器。源码地址– <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_lombok" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_lombok</a> </p>
-<p>此次的程序编写顺序依然是users.sql–&gt;pom.xml–&gt;application.yml–&gt;src–&gt;resource。</p>
-<p>​    首先是导入users.sql建表，或者用命令行照着敲。</p>
-<p>​    然后是pom.xml，在创建项目时配置依赖时要勾选web，MySQL，mybatis framework。本次由于没有勾选mybtis framework，导致出了一系列bug。</p>
-<p>​    之后你需要使用Ctrl+Alt+S转到设置然后在plugin里面安装lombok。安装lombok插件后还要在pom.xml添加lombok依赖</p>
-<p><img src="http://i1.fuimg.com/703764/47ac13c32433a959.png" alt="http://i1.fuimg.com/703764/47ac13c32433a959.png"></p>
-<p>   添加好lombok依赖后就是application.yml的配置了。本次尝试了使用application.yml来替代application.properties，写出来的配置看起来的确清爽许多，当然实际内容并没有变化。</p>
-<p><img src="http://i1.fuimg.com/703764/466dbdcf67559018.png" alt="http://i1.fuimg.com/703764/466dbdcf67559018.png"></p>
-<p>  <strong>小技巧：当url过长时可以使用字符串然后用反斜杠<code>\</code>来进行换行</strong></p>
-<p>   之后就是model中的User类，在这里我们使用了lombok，通过@Data注解省略了getter、setter、ToString等方法的书写，lombok在编译期会自动帮我们加上这些方法。其背后的原理是使用自定义注解让编译器在处理注解后修改源代码来生成对应的class文件。</p>
-<p><img src="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png" alt="http://i1.fuimg.com/703764/f51a18dc4fd94bb6.png"></p>
-<p>​    在这里再贴一波官方文档地址– <a href="https://projectlombok.org/features/all" target="_blank" rel="noopener">https://projectlombok.org/features/all</a> </p>
-<p>​    我们来看下源代码在使用了lombok后能简洁到什么程度</p>
-<p><img src="http://i1.fuimg.com/703764/81e27c96955a8e6c.png" alt="http://i1.fuimg.com/703764/81e27c96955a8e6c.png"></p>
-<p>​    可以看到我们每个属性的getter、setter，还有ToString方法都不用书写了。虽然说ide一般都会有Alt+Insert快捷键帮我们生成这些方法，但是使用lombok可以使代码更加简洁，而且修改属性时会更加方便，不需要再删除掉那些方法重新生成。简直java后端程序猿的一大神器！</p>
-<p>​    本次的代码讲解到此结束，有兴趣的小伙伴不妨分屏照着我的源码一边看一边敲，这样可以减少bug的出现率（虽然肯定避免不了写bug，这时候就只能请出google了）。在这里再安利一下chrome的Octotree插件，可以在github的仓库中生成目录树，极大地方便了代码的查看。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck35yn06w0000gow4d2vl9h8v" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-springboot零基础入门" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" class="article-date">
-  <time datetime="2019-11-15T12:57:34.000Z" itemprop="datePublished">2019-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/SpringBoot/">SpringBoot</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Spring Boot是由Pivotal团队提供的全新框架，Spring Framework也是他们的杰作，Spring最早是由Rod Johnson和Pivotal团队开发的。在开发Spring Framework之前还著书《Expert One-on-One J2EE Development without EJB》用于批判当时业界主流后端框架EJB，缘由是EJB过于臃肿，这本书为Spring Framework的诞生奠定了理论基础。由于Rod Johnson在Spring Framework的理论和实现上的卓出贡献，其被称为Spring之父。—为大佬献上狗头</p>
-<h1 id="Spring-Boot-Mybatis实现xml版本的增删查改demo"><a href="#Spring-Boot-Mybatis实现xml版本的增删查改demo" class="headerlink" title="Spring Boot + Mybatis实现xml版本的增删查改demo"></a>Spring Boot + Mybatis实现xml版本的增删查改demo</h1><p>​    以下代码可以参考我的github   <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_mybatis_xml" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_mybatis_xml</a> ,如果觉得本文对你有帮助的话，还请star一下我的github，你的支持就是对我最大的鼓励。</p>
-<p>​    我们首先从增删查改的demo来入门，hello world就不赘述了。首先你需要配置一个数据库进行数据的增删查改。这里我推荐如今的主流数据库MySQL，具体可以参考<code>菜鸟教程</code><a href="https://www.runoob.com/mysql/mysql-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/mysql/mysql-tutorial.html</a> 进行安装。</p>
-<p>​    安装MySQL后导入<code>users.sql</code> <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/blob/master/springboot_mybatis_xml/users.sql" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/blob/master/springboot_mybatis_xml/users.sql</a> 到MySQL的<code>test</code>数据库来建表，具体可以使用MySQL命令行、Navicat、MySQL workbench来导入，推荐使用前两种方式。</p>
-<p>​    之后使用idea来生成Spring Boot，现在点击idea的文件–&gt;新建项目，然后选择Spring Initialize</p>
-<p><img src="http://i1.fuimg.com/703764/e9c6ca5c9eb0f094.png" alt="spring initialize"></p>
-<p>​    然后按照图示创建项目就可以了</p>
-<p><img src="http://i1.fuimg.com/703764/709592ed55cd2847.png" alt="项目"></p>
-<p>创建Spring Boot后的src（source）源代码文件夹如图所示：</p>
-<p><img src="http://i2.tiimg.com/703764/85001522bf4284f9.png" alt="http://i2.tiimg.com/703764/85001522bf4284f9.png"></p>
-<p>一般src中写代码的顺序为：</p>
-<p>1.model层，模型层，该层中每一个类对应数据库中的一个表</p>
-<p>2.mapper层，数据访问层，也被称为DAO(Data Access Object)层，该层中都是接口，一个接口对应一个model，用来操作model。接口中的方法一般有对应数据库的SELECT，DELETE，INSERT，UPDATE方法，就是普通的增删查改，俗称<code>CRUD</code>。该层可以说是Spring中<code>IoC</code>最直观的体现，只需定义接口，无需提供具体的实现类，Spring中的IoC会自动为其注入依赖。具体对Spring中<code>Ioc</code>、<code>DI</code>、<code>Aop</code>等的理解可以参考<code>《spring揭秘》</code>这本书，在此不予多做讨论。</p>
-<p>3.web层，也被称为Controller（控制层），用于提供前端访问后端的接口（这里的接口是指URL）。一般写好了程序也可用Controller来测试，不过更常用的方法是写单元测试的代码，这样方便快捷，不需要每次都一个个接口地测试。</p>
-<p>至于enums文件夹只是我的项目特有的文件夹，就只有一个枚举类。SprinbootMybatisXmlApplication类是项目的配置和启动类，Spring Boot中还有许多可能令你莫名其妙的注解，具体注解的作用和使用方式可以参考<code>Spring Boot官方文档</code> <a href="https://www.breakyizhan.com/springboot/3091.html" target="_blank" rel="noopener">https://www.breakyizhan.com/springboot/3091.html</a> 。</p>
-<p>接下来再来看看resource（资源）文件夹</p>
-<p><img src="http://i1.fuimg.com/703764/5432c727d99e8aeb.png" alt="http://i1.fuimg.com/703764/5432c727d99e8aeb.png"></p>
-<p>mybatis-config.xml是mybatis的配置类，里面主要定义了类型的别名。UserMapper.xml是对应src文件夹的mapper层的UserMapper接口，用来提供该接口中每个方法的xml（也就是SQL语句）的实现。application.properties是应用的配置类，主要有spring和mybatis的相关配置。</p>
-<p>在src文件夹和resource文件夹还有值得我们关注的pom.xml文件</p>
-<p><img src="http://i2.tiimg.com/703764/8e1f9dc0e2b4865e.png" alt="pom.xml"></p>
-<p>该文件主要作用是配置Spring Boot的相关依赖，一般我们如果在创建Spring Boot的时候勾选了web，该文件在本次项目中就可以不予理会了。不过如果没勾选web也不急，我们可以在dependency中添加web依赖</p>
-<p><img src="http://i2.tiimg.com/703764/18334c65e0c8c0bf.png" alt="web依赖"></p>
-<p>一般写代码的文件顺序为pom.xml–&gt;application.properties–&gt;model–&gt;mapper–&gt;mybatis.mapper–&gt;web，按上面的顺序照着github上的源代码撸一下就大功告成了。</p>
-<p><strong>小技巧：使用win+左右方向键可以快速在windows上分屏，然后就可以边看源码边撸代码了</strong></p>
-<p>最后启动SpringbootXmlApplication类就可以在浏览器按着localhost:8080/getUsers等URL对每个方法就行测试了。</p>
-<p><img src="http://i1.fuimg.com/703764/4d51dea1112c5a5f.png" alt="getUsers"></p>
-<p>URL对应RequestMapping注解中的字符串而不是下面的方法名称哦。</p>
-<p>当然如果你并不想一个个地用URL测试也可以编写单元测试，照着源代码中的test文件夹撸代码然后在对应测试类文件夹中运行该类就可以了。</p>
-<p><img src="http://i2.tiimg.com/703764/f2b418caecdcf8c9.png" alt="test"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck35yn0750004gow4hsji36lp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
