@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>springboot集成thymeleaf | 沧海一粟可为舟的个人技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​    边学边写系列又来了，今天小编为大家带来的thymeleaf模板。 ​    废话不多说，先贴一份官方文档为敬。 https:&#x2F;&#x2F;www.thymeleaf.org&#x2F;doc&#x2F;tutorials&#x2F;3.0&#x2F;thymeleafspring.html  ​    顺便每次一贴github地址  https:&#x2F;&#x2F;github.com&#x2F;lonelyProgramMonkey&#x2F;SpringBoot-de">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot集成thymeleaf">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;21&#x2F;springboot%E9%9B%86%E6%88%90thymeleaf&#x2F;index.html">
+<meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
+<meta property="og:description" content="​    边学边写系列又来了，今天小编为大家带来的thymeleaf模板。 ​    废话不多说，先贴一份官方文档为敬。 https:&#x2F;&#x2F;www.thymeleaf.org&#x2F;doc&#x2F;tutorials&#x2F;3.0&#x2F;thymeleafspring.html  ​    顺便每次一贴github地址  https:&#x2F;&#x2F;github.com&#x2F;lonelyProgramMonkey&#x2F;SpringBoot-de">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-21T01:59:35.823Z">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">沧海一粟可为舟的个人技术博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">专注Java后端技术分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/tags/SpringBoot">SpringBoot</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot集成thymeleaf" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" class="article-date">
+  <time datetime="2019-11-21T01:10:52.000Z" itemprop="datePublished">2019-11-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      springboot集成thymeleaf
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    边学边写系列又来了，今天小编为大家带来的thymeleaf模板。</p>
+<p>​    废话不多说，先贴一份官方文档为敬。 <a href="https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html" target="_blank" rel="noopener">https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html</a> </p>
+<p>​    顺便每次一贴github地址  <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos</a> </p>
+<p>​    总结起来thymeleaf就是html的中使用一些占位符来实现替换，类似在Mybatis中写SQL语句那样。如果html不熟也没关系，详细注释带你边写边学。</p>
+<p>​    现在依然按老套路来编写代码。首先来搞一下pom.xml，把我们的依赖配置好。这一步是重中之重，倘若这一步出错后面就等着吃bug吧。在初始化项目的时候我们需要勾选如下依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--Developer Tools</span><br><span class="line">	--Spring Boot DevTools   //热部署插件</span><br><span class="line">	--Lombok</span><br><span class="line">--Template Engines</span><br><span class="line">	--Thymeleaf</span><br><span class="line">--Web</span><br><span class="line">	--Spring web</span><br></pre></td></tr></table></figure>
+
+<p>除此之外还要再pom.xml中添加如下依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;nz.net.ultraq.thymeleaf&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;thymeleaf-layout-dialect&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后是application.properties，这次只需要一行，是不是觉得幸福了许多。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#关闭thymeleaf缓存，开发时使用，否则没有实时画面</span><br><span class="line">spring.thymeleaf.cache=false</span><br></pre></td></tr></table></figure>
+
+<p>然后是model层User类，不赘述，看github，之后是web层的HelloController：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Controller //此次由于使用了页面，所以改为Controller注解</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/&quot;)</span><br><span class="line">    public String index(ModelMap map)&#123;</span><br><span class="line">        map.addAttribute(&quot;message&quot;, &quot;http://www.ityouknow.com&quot;);</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    需要注意的是HelloController上面的注解，本次由于用到thymeleaf模板，有了模板，不再需要使用json数据传输，所以我们需要将@RestController注解换成@Controller。与HelloController中的index方法所使用到thymeleaf模板是resource文件夹中的hello.html：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1 th:text=&quot;$&#123;message&#125;&quot;&gt;Hello World&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    看了一下是不是觉得就只是在html中添加了占位符而已。</p>
+<p>​    然后是ExampleController：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class ExampleController &#123;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/string&quot;)</span><br><span class="line">    public String string(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;userName&quot;, &quot;ityouknow&quot;);</span><br><span class="line">        return &quot;string&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/if&quot;)</span><br><span class="line">    public String ifunless(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;flag&quot;, &quot;yes&quot;);</span><br><span class="line">        return &quot;if&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/list&quot;)</span><br><span class="line">    public String list(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;users&quot;, getUserList());</span><br><span class="line">        return &quot;list&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/url&quot;)</span><br><span class="line">    public String url(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;type&quot;, &quot;link&quot;);</span><br><span class="line">        map.addAttribute(&quot;pageId&quot;, &quot;springcloud/2107/09/11&quot;);</span><br><span class="line">        map.addAttribute(&quot;img&quot;, &quot;http://www.ityouknow.com/assets/images/neo.jpg&quot;);</span><br><span class="line">        return &quot;url&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/eq&quot;)</span><br><span class="line">    public String eq(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;name&quot;, &quot;neo&quot;);</span><br><span class="line">        map.addAttribute(&quot;age&quot;, 30);</span><br><span class="line">        map.addAttribute(&quot;flag&quot;, &quot;yes&quot;);</span><br><span class="line">        return &quot;eq&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/switch&quot;)</span><br><span class="line">    public String switchcase(ModelMap map) &#123;</span><br><span class="line">        map.addAttribute(&quot;sex&quot;, &quot;woman&quot;);</span><br><span class="line">        return &quot;switch&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * private 函数放在public函数后面，用户主要关注public函数</span><br><span class="line">     * @return List&lt;User&gt; 返回用户列表</span><br><span class="line">     */</span><br><span class="line">    private List&lt;User&gt; getUserList() &#123;</span><br><span class="line">        List&lt;User&gt; list = new ArrayList&lt;User&gt;();</span><br><span class="line">        User user1 = new User(&quot;大牛&quot;, 12, &quot;123456&quot;);</span><br><span class="line">        User user2 = new User(&quot;小牛&quot;, 6, &quot;1234563&quot;);</span><br><span class="line">        User user3 = new User(&quot;纯洁的微笑&quot;, 66, &quot;666666&quot;);</span><br><span class="line">        list.add(user1);</span><br><span class="line">        list.add(user2);</span><br><span class="line">        list.add(user3);</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    ExampleController中需要用到的模板太多，我们只挑list方法需要用到的list模板看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Example If/Unless &lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;!--division 部分--&gt;</span><br><span class="line">&lt;div &gt;</span><br><span class="line">    &lt;!--headline 标题--&gt;</span><br><span class="line">    &lt;h1&gt;for 循环&lt;/h1&gt;</span><br><span class="line">    &lt;table&gt;</span><br><span class="line">        &lt;!--table row 表格行--&gt;</span><br><span class="line">        &lt;tr  th:each=&quot;user,iterStat : $&#123;users&#125;&quot;&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td th:text=&quot;$&#123;user.name&#125;&quot;&gt;neo&lt;/td&gt;</span><br><span class="line">            &lt;td th:text=&quot;$&#123;user.age&#125;&quot;&gt;6&lt;/td&gt;</span><br><span class="line">            &lt;td th:text=&quot;$&#123;user.pass&#125;&quot;&gt;213&lt;/td&gt;</span><br><span class="line">            &lt;td th:text=&quot;$&#123;iterStat.index&#125;&quot;&gt;index&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">    &lt;/table&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    照着github撸完我们就可以点击SpringBootThymeleafApplication来测试了。</p>
+<p>​    先来测试一下hello模板，也就是HelloController中的方法，在地址栏输入localhost:8080，显示页面如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;http://www.ityouknow.com&lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>之后再条list模板来看下，输入localhost:8080/list：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;!--headline 标题--&gt;</span><br><span class="line">    &lt;h1&gt;for 循环&lt;/h1&gt;</span><br><span class="line">    &lt;table&gt;</span><br><span class="line">        &lt;!--table row 表格行--&gt;</span><br><span class="line">        &lt;tbody&gt;&lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;大牛&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;12&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;123456&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;0&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;小牛&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;6&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;1234563&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;1&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;纯洁的微笑&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;66&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;666666&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;2&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">    &lt;/tbody&gt;&lt;/table&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面显示的东西其实是我从浏览器中copy出来的html代码，并不是截图。有兴趣的小伙伴不妨把全部模板都测试一遍。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck382iw3p00026gw45zwndm79" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">springboot集成Redis</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/SpringBoot/" style="font-size: 10px;">SpringBoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/">springboot集成thymeleaf</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/">springboot集成Redis</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 lin qx<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags/SpringBoot" class="mobile-nav-link">SpringBoot</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
