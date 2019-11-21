@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
 <meta property="og:description" content="​    边学边写系列又来了，今天小编为大家带来的thymeleaf模板。 ​    废话不多说，先贴一份官方文档为敬。 https:&#x2F;&#x2F;www.thymeleaf.org&#x2F;doc&#x2F;tutorials&#x2F;3.0&#x2F;thymeleafspring.html  ​    顺便每次一贴github地址  https:&#x2F;&#x2F;github.com&#x2F;lonelyProgramMonkey&#x2F;SpringBoot-de">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-21T01:59:35.823Z">
+<meta property="og:updated_time" content="2019-11-21T02:02:35.739Z">
 <meta name="twitter:card" content="summary">
   
   
@@ -115,17 +115,53 @@
 
 <p>​    照着github撸完我们就可以点击SpringBootThymeleafApplication来测试了。</p>
 <p>​    先来测试一下hello模板，也就是HelloController中的方法，在地址栏输入localhost:8080，显示页面如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;http://www.ityouknow.com&lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+<h1>http://www.ityouknow.com</h1>
+
+</body></html>
+
 
 <p>之后再条list模板来看下，输入localhost:8080/list：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;!--headline 标题--&gt;</span><br><span class="line">    &lt;h1&gt;for 循环&lt;/h1&gt;</span><br><span class="line">    &lt;table&gt;</span><br><span class="line">        &lt;!--table row 表格行--&gt;</span><br><span class="line">        &lt;tbody&gt;&lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;大牛&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;12&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;123456&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;0&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;小牛&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;6&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;1234563&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;1&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;!--table data 表格行中的数据--&gt;</span><br><span class="line">            &lt;td&gt;纯洁的微笑&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;66&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;666666&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;2&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">    &lt;/tbody&gt;&lt;/table&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<div>
+    <!--headline 标题-->
+    <h1>for 循环</h1>
+    <table>
+        <!--table row 表格行-->
+        <tbody><tr>
+            <!--table data 表格行中的数据-->
+            <td>大牛</td>
+            <td>12</td>
+            <td>123456</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <!--table data 表格行中的数据-->
+            <td>小牛</td>
+            <td>6</td>
+            <td>1234563</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <!--table data 表格行中的数据-->
+            <td>纯洁的微笑</td>
+            <td>66</td>
+            <td>666666</td>
+            <td>2</td>
+        </tr>
+    </tbody></table>
+</div>
+
 
 <p>上面显示的东西其实是我从浏览器中copy出来的html代码，并不是截图。有兴趣的小伙伴不妨把全部模板都测试一遍。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck382iw3p00026gw45zwndm79" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck382jfdq0004kkw4bs592j96" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
