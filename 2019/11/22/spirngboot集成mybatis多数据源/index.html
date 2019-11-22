@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>spirngboot集成mybatis多数据源 | 沧海一粟可为舟的个人技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​    今天小编为大家带来mybatis的多数据源解决方案。 ​    多数据源是什么？应用场景又是什么？说实话一切不讲应用场景的技术都是耍流氓。多数据源的典型应用场景有：1.主从同步读写分离2.业务复杂到需要多个数据库存储数据时 ​    今天我们为大家带来的是读写分离的伪主从同步数据库。首先我们需要建表， https:&#x2F;&#x2F;github.com&#x2F;lonelyProgramMonkey&#x2F;Spri">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spirngboot集成mybatis多数据源">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90&#x2F;index.html">
+<meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
+<meta property="og:description" content="​    今天小编为大家带来mybatis的多数据源解决方案。 ​    多数据源是什么？应用场景又是什么？说实话一切不讲应用场景的技术都是耍流氓。多数据源的典型应用场景有：1.主从同步读写分离2.业务复杂到需要多个数据库存储数据时 ​    今天我们为大家带来的是读写分离的伪主从同步数据库。首先我们需要建表， https:&#x2F;&#x2F;github.com&#x2F;lonelyProgramMonkey&#x2F;Spri">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-22T03:53:58.872Z">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">沧海一粟可为舟的个人技术博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">专注Java后端技术分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/tags/SpringBoot">SpringBoot</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-spirngboot集成mybatis多数据源" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" class="article-date">
+  <time datetime="2019-11-22T02:57:11.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      spirngboot集成mybatis多数据源
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    今天小编为大家带来mybatis的多数据源解决方案。</p>
+<p>​    多数据源是什么？应用场景又是什么？说实话一切不讲应用场景的技术都是耍流氓。多数据源的典型应用场景有：<br>1.主从同步读写分离<br>2.业务复杂到需要多个数据库存储数据时</p>
+<p>​    今天我们为大家带来的是读写分离的伪主从同步数据库。首先我们需要建表， <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_mybatis_xml_multisource" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_mybatis_xml_multisource</a> ，在我的对应的github项目里面可以看到看到有test1和test2两张表，使用idea连接数据库copy SQL语句到DDL中就可以建表了。</p>
+<p>首先我们还是需要先配置pom.xml，需要在创建项目勾选如下依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--Developer Tools</span><br><span class="line">	--Spring Boot DevTools</span><br><span class="line">	--Lombok</span><br><span class="line">--Web</span><br><span class="line">	--Spring Web</span><br><span class="line">--SQL</span><br><span class="line">	--MyBatis Framework</span><br><span class="line">	--MySQL Driver</span><br></pre></td></tr></table></figure>
+
+<p>​    勾选完成之后我们就可以接着配置application.yml了，不用说上代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mybatis:</span><br><span class="line">  config-location: classpath:mybatis/mybatis-config.xml</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    test1:</span><br><span class="line">      jdbc-url: &quot;jdbc:mysql://localhost:3306/test1?serverTimezone=UTC\</span><br><span class="line">        &amp;useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=true&quot;</span><br><span class="line">      username: root</span><br><span class="line">      password: password</span><br><span class="line">      driver-class-name: com.mysql.cj.jdbc.Driver</span><br><span class="line">    test2:</span><br><span class="line">      jdbc-url: &quot;jdbc:mysql://localhost:3306/test2?serverTimezone=UTC\</span><br><span class="line">        &amp;useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=true&quot;</span><br><span class="line">      username: root</span><br><span class="line">      password: password</span><br><span class="line">      driver-class-name: com.mysql.cj.jdbc.Driver</span><br></pre></td></tr></table></figure>
+
+<p>​    接下来配置mybatis-config，懒的同学直接CV就行了，我自己也是保存为模板然后再创建文件时直接生成的。</p>
+<p>​    之后重头戏就来了。我们需要配置mybatis，在单个数据源的时候SpringBoot会自动帮我们装配好，但是多个数据源时就要自己配置了，而且还要指定主数据源，也就是主库。</p>
+<p>​    先看一下配置mybatis的流程：<br>1.定义一个Configuration对象，其中包含数据源、事务、mapper文件资源以及影响数据库行为属性设置settings<br>2.通过配置对象，则可以创建一个SqlSessionFactoryBuilder对象<br>3.通过 SqlSessionFactoryBuilder 获得SqlSessionFactory 的实例。<br>4.SqlSessionFactory 的实例可以获得操作数据的SqlSession实例，通过这个实例对数据库进行操作</p>
+<p>总结起来就是：SqlSessionFactoryBuilder–&gt;SqlSessionFactory–&gt;SqlSession。看一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@MapperScan(basePackages = &quot;com.neo.mapper.test1&quot;,</span><br><span class="line">        sqlSessionTemplateRef = &quot;test1SqlSessionTemplate&quot;)</span><br><span class="line">public class DataSource1Config &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 配置数据源</span><br><span class="line">     * @return 返回数据源</span><br><span class="line">     */</span><br><span class="line">    @Bean(name = &quot;test1DataSource&quot;)</span><br><span class="line">    //对应数据库</span><br><span class="line">    @ConfigurationProperties(prefix = &quot;spring.datasource.test1&quot;)</span><br><span class="line">    @Primary   //指定主数据库</span><br><span class="line">    public DataSource testDataSource() &#123;</span><br><span class="line">        return DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 配置SqlSession工厂</span><br><span class="line">     * @param dataSource 数据源</span><br><span class="line">     * @return  返回SqlSessionFactory对象</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Bean(name = &quot;test1SqlSessionFactory&quot;)</span><br><span class="line">    @Primary</span><br><span class="line">    public SqlSessionFactory testSqlSessionFactory  //Qualifier中的value要与上面的Bean一致</span><br><span class="line">    (@Qualifier(&quot;test1DataSource&quot;) DataSource dataSource) throws Exception &#123;</span><br><span class="line">        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();</span><br><span class="line">        bean.setDataSource(dataSource);</span><br><span class="line">        bean.setMapperLocations(new PathMatchingResourcePatternResolver()</span><br><span class="line">                .getResources(&quot;classpath:mybatis/mapper/test1/*.xml&quot;));</span><br><span class="line">        return bean.getObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 配置数据源的事务管理</span><br><span class="line">     * @param dataSource 数据源</span><br><span class="line">     * @return 数据源事务管理类</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Bean(name = &quot;test1TransactionManager&quot;)</span><br><span class="line">    @Primary</span><br><span class="line">    public DataSourceTransactionManager testTransactionManager</span><br><span class="line">            (@Qualifier(&quot;test1DataSource&quot;) DataSource dataSource) throws Exception &#123;</span><br><span class="line">        return new DataSourceTransactionManager(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 配置SqlSession模板</span><br><span class="line">     * @param sqlSessionFactory 拿到sqlSession的工厂</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    @Bean(name = &quot;test1SqlSessionTemplate&quot;)</span><br><span class="line">    @Primary</span><br><span class="line">    public SqlSessionTemplate testSqlSessionTemplate</span><br><span class="line">            (@Qualifier(&quot;test1SqlSessionFactory&quot;) SqlSessionFactory sqlSessionFactory)</span><br><span class="line">            throws Exception &#123;</span><br><span class="line">        return new SqlSessionTemplate(sqlSessionFactory);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    上面的时test1的数据源配置，test2类似。之后就是model–&gt;mapper–&gt;web这一套老流程了，这个就不贴代码了，直接到github上看就行。</p>
+<p>​    编写完程序代码之后我们按惯例来进行测试，此次我们来测试web层的controller，这个属于集成测试的范围，使用junit和MockMvc模拟Web的调用来进行测试。我们可以先看下SpringMVC集成测试的官方文档： <a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/testing.html#spring-mvc-test-framework" target="_blank" rel="noopener">https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/testing.html#spring-mvc-test-framework</a> </p>
+<p>​    然后我们再来看一下代码，代码基本是仿照官方文档的代码编写的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringRunner.class)</span><br><span class="line">@SpringBootTest</span><br><span class="line">public class UserControllerTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private WebApplicationContext wac;</span><br><span class="line"></span><br><span class="line">    private MockMvc mockMvc;</span><br><span class="line"></span><br><span class="line">    @Before</span><br><span class="line">    public void setUp() throws Exception&#123;</span><br><span class="line">        //初始化MockMvc对象</span><br><span class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @org.junit.Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void save() throws Exception&#123;</span><br><span class="line">        mockMvc.perform(MockMvcRequestBuilders.post(&quot;/save&quot;)</span><br><span class="line">                .accept(MediaType.APPLICATION_JSON))</span><br><span class="line">                .andDo(print())</span><br><span class="line">                .andExpect(status().isOk());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void getOne() throws Exception&#123;</span><br><span class="line">        //执行URL</span><br><span class="line">        mockMvc.perform(MockMvcRequestBuilders.get(&quot;/getOne&quot;)</span><br><span class="line">                .param(&quot;id&quot;, &quot;1&quot;)  //传入参数</span><br><span class="line">                .accept(MediaType.APPLICATION_JSON))  //接受成JSON类型</span><br><span class="line">                .andDo(print())   //打印结果</span><br><span class="line">                .andExpect(status().isOk())   //期望返回状态值OK</span><br><span class="line">                //期望返回的name是aa</span><br><span class="line">   .andExpect(MockMvcResultMatchers.jsonPath(&quot;$.name&quot;).value(&quot;aa&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void getUsers() throws Exception&#123;</span><br><span class="line">        mockMvc.perform(MockMvcRequestBuilders.post(&quot;/listUsers&quot;)</span><br><span class="line">            .accept(MediaType.APPLICATION_JSON_VALUE)).andDo(print());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    主要看getOne方法里面的注释走一遍就可以了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" data-id="ck39m217w0001h4w491w412es" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">springboot集成thymeleaf</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/SpringBoot/" style="font-size: 10px;">SpringBoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/">spirngboot集成mybatis多数据源</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/">springboot集成thymeleaf</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/">springboot集成Redis</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 lin qx<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags/SpringBoot" class="mobile-nav-link">SpringBoot</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
