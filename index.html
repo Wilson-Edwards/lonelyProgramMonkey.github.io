@@ -65,6 +65,71 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-springboot集成swagger" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/" class="article-date">
+  <time datetime="2019-11-22T12:06:05.000Z" itemprop="datePublished">2019-11-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/">springboot集成swagger</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    今天小编又为大家带来干货了。此次的主角是swagger。swagger是什么呢？简单来说就是一个接口文档。在当今前后端分离的大势下，接口文档可以很方便地实现前后端的联调。想起大二数据库实训项目的时候让前端人员去看我的代码来调用接口，至今还是有些不忍直视。</p>
+<p>​    日常贴一下github地址  <a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_swagger" target="_blank" rel="noopener">https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_swagger</a> </p>
+<p>​    然后再来贴下springfox-swagger2的官方文档  <a href="http://springfox.github.io/springfox/docs/current/#dependencies" target="_blank" rel="noopener">http://springfox.github.io/springfox/docs/current/#dependencies</a> ，说实话这个官方文档有点乱，看博客下面的介绍就可以。</p>
+<p>​    注意swagger和springfox的区别，swagger是一种api的规范，springfox-swagger2是该规范的一种实现，除了springfox-swagger2之外还有国内spring4All社区开发的 swagger-spring-boot-starter 。不过主流还是springfox-swagger2，主流方案一般参考教程多并且坑会比较少，所以还是跟着主流比较好。</p>
+<p>​    先来看下pom.xml，我们需要勾选如下依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--Developer Tools</span><br><span class="line">	--Spring Boot DevTools</span><br><span class="line">	--Lombok</span><br><span class="line">--Web</span><br><span class="line">	--Spring Web</span><br></pre></td></tr></table></figure>
+
+<p>​    生成pom.xml文件后还需要添加如下依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;io.springfox&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.9.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;io.springfox&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.9.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    然后这次不需要application.properties的配置，直接跳到swagger的配置config的包。贴一下SwaggerConfig类的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableSwagger2</span><br><span class="line">public class SwaggerConfig &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    public Docket createRestApi() &#123;</span><br><span class="line">        return new Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .pathMapping(&quot;/&quot;)</span><br><span class="line">                .select()</span><br><span class="line">                //改成自己的controller对应的包</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(&quot;com.neo.controller&quot;))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build().apiInfo(new ApiInfoBuilder()</span><br><span class="line">                        .title(&quot;SpringBoot整合Swagger&quot;)</span><br><span class="line">                        .build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以看到配置还是相对简单的，主要是我把标题下面的东西全都省略掉了，官方文档有配置的解读，不过看着很难受就是了。配置好之后可以运行程序然后再浏览器地址栏访问 <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a> 看一下生成的swagger文档</p>
+<p>​    然后是User类</p>
+<p> - @ApiModel() 用于类，表示对类进行说明，用于参数用实体类接收  </p>
+<p> - @ApiModelProperty() 用于方法，字段 ，表示对 model 属性的说明或者数据操作更改  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@ApiModel  //用来标识该类可以被swagger发现</span><br><span class="line">public class User &#123;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户id&quot;)</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户名&quot;)</span><br><span class="line">    private String username;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户地址&quot;)</span><br><span class="line">    private String address;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后再来贴下UserController类：</p>
+<p> - @Api() 用于类 ,表示标识这个类是 swagger 的资源  </p>
+<p> - @ApiOperation() 用于方法, 表示一个 http 请求的操作  </p>
+<p> - @ApiImplicitParams() 用于方法，包含多个 @ApiImplicitParam </p>
+<p> - @ApiImplicitParam() 用于方法, 表示单独的请求参数  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@Api(tags = &quot;用户管理接口&quot;)</span><br><span class="line">@RequestMapping(&quot;/user&quot;)</span><br><span class="line">public class UserController &#123;</span><br><span class="line"></span><br><span class="line">    @ApiOperation(&quot;根据id查询用户&quot;)</span><br><span class="line">    @ApiImplicitParams(&#123;</span><br><span class="line">            @ApiImplicitParam(name = &quot;id&quot;, value = &quot;用户id&quot;, defaultValue = &quot;99&quot;)</span><br><span class="line">    &#125;)</span><br><span class="line">    @GetMapping(&quot;/&quot;)</span><br><span class="line">    public User getUserById(Long id)&#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setId(id);</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @ApiOperation(&quot;根据id更新用户名&quot;)</span><br><span class="line">    @ApiImplicitParams(&#123;</span><br><span class="line">            @ApiImplicitParam(name = &quot;id&quot;, value = &quot;用户id&quot;, defaultValue = &quot;99&quot;),</span><br><span class="line">            @ApiImplicitParam(name = &quot;username&quot;, value = &quot;用户名&quot;, defaultValue = &quot;aa&quot;)</span><br><span class="line">    &#125;)</span><br><span class="line">    @PutMapping(&quot;/&quot;)</span><br><span class="line">    public User UpdateUsernameById(String username, Long id)&#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setId(id);</span><br><span class="line">        user.setUsername(username);</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @ApiOperation(&quot;添加用户&quot;)</span><br><span class="line">    @PostMapping(&quot;/&quot;)</span><br><span class="line">    public User addUser(@RequestBody User user)&#123;</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @ApiOperation(&quot;根据id删除用户&quot;)</span><br><span class="line">    @DeleteMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="line">    public void deleteUserById(@PathVariable Long id)&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    写好程序之后运行 <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a> 就可以查看文档，至于文档中的操作可以参考教程  <a href="http://springboot.javaboy.org/2019/0416/springboot-swagger" target="_blank" rel="noopener">http://springboot.javaboy.org/2019/0416/springboot-swagger</a> ，可以在文档中进行测试。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/" data-id="ck3a5c75v0003pgw4azztbvnm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-spirngboot集成mybatis多数据源" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" class="article-date">
@@ -112,7 +177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" data-id="ck39m217w0001h4w491w412es" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" data-id="ck3a5c75r0001pgw41jedhmbe" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -220,7 +285,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck39m218f0006h4w4e8wk1rs1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck3a5c75w0004pgw41wbxfyst" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -296,7 +361,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" data-id="ck39m218i000ah4w4f55g4rk9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" data-id="ck3a5c76a000bpgw4fwn968ha" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -350,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck39m217r0000h4w4hmkpa7g6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck3a5c75m0000pgw4h1rm7rm5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -421,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck39m218g0008h4w4cfm3hzur" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck3a5c76b000dpgw49o0t0uqu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -485,6 +550,10 @@
       <ul>
         
           <li>
+            <a href="/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/">springboot集成swagger</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/">spirngboot集成mybatis多数据源</a>
           </li>
         
@@ -498,10 +567,6 @@
         
           <li>
             <a href="/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/">SpringBoot集成lombok和配置yml</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">springboot零基础入门</a>
           </li>
         
       </ul>
