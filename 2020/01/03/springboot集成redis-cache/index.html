@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>springboot集成redis-cache | 沧海一粟可为舟的个人技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​        继上次发redis的文章已经过去十多天了，如今看来上次的文章真的惨不忍睹，没有get到redis的正确使用姿势。众所周知reids是用来做缓存的，而Spring为了更好地集成redis推出了spring-cache来作为缓存，下面小编就带大家走进spring-cache的世界。 ​        首先依旧是惯例的该demo对应github地址，然后是此次demo对应官方Guide">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot集成redis-cache">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;03&#x2F;springboot%E9%9B%86%E6%88%90redis-cache&#x2F;index.html">
+<meta property="og:site_name" content="沧海一粟可为舟的个人技术博客">
+<meta property="og:description" content="​        继上次发redis的文章已经过去十多天了，如今看来上次的文章真的惨不忍睹，没有get到redis的正确使用姿势。众所周知reids是用来做缓存的，而Spring为了更好地集成redis推出了spring-cache来作为缓存，下面小编就带大家走进spring-cache的世界。 ​        首先依旧是惯例的该demo对应github地址，然后是此次demo对应官方Guide">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-03T08:01:55.786Z">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">沧海一粟可为舟的个人技术博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">专注Java后端技术分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/tags/SpringBoot">SpringBoot</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot集成redis-cache" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/" class="article-date">
+  <time datetime="2020-01-03T06:30:38.000Z" itemprop="datePublished">2020-01-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      springboot集成redis-cache
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​        继上次发<code>redis</code>的文章已经过去十多天了，如今看来上次的文章真的惨不忍睹，没有get到<code>redis</code>的正确使用姿势。众所周知<code>reids</code>是用来做缓存的，而<code>Spring</code>为了更好地集成<code>redis</code>推出了<code>spring-cache</code>来作为缓存，下面小编就带大家走进<code>spring-cache</code>的世界。</p>
+<p>​        首先依旧是惯例的<a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_redis_cache" target="_blank" rel="noopener">该demo对应github地址</a>，然后是此次demo对应官方Guide地址 <a href="https://spring.io/guides/gs/caching/" target="_blank" rel="noopener">https://spring.io/guides/gs/caching/</a> ，spring的Guide相当于一个个demo的教程，非常好用。接下来贴一下spring官方文档对应的<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache" target="_blank" rel="noopener">cache章节</a>，官方文档的介绍非常的详细，但是全英的一大段阅读起来还是不免有些吃力。不过阅读官方文档是程序猿不可或缺的技能。该官方文档是spring-framework的官方文档，除此之外还有springboot的官方文档，一般这两个文档要结合在一起看。</p>
+<p>​        依照惯例，首先从<code>pom.xml</code>搞起，下面列举一下在idea新建项目时所需要勾选的依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Developer Tools</span><br><span class="line">	Spring Boot DevTools</span><br><span class="line">	Lombok</span><br><span class="line"></span><br><span class="line">SQL</span><br><span class="line">	MyBatis Framework</span><br><span class="line">	MySQL Driver</span><br><span class="line">	</span><br><span class="line">NoSQL</span><br><span class="line">	Spring Data Redis(Access+Driver)</span><br></pre></td></tr></table></figure>
+
+<p>​        接下来是resource中的application.yml，代码就不贴了，照着github的撸就行。其实像这种不会有太大变化的配置文件可以使用模板来保存，然后在使用Alt + Insert快捷键创建新文件时就能在下面直接选模板来创建。文件模板的具体使用方法可以<a href="https://blog.csdn.net/cgl125167016/article/details/78754246" target="_blank" rel="noopener">参照该博客</a>。</p>
+<p>​        之后就是套路化的model和dao层的搬砖，此次demo小编本来打算按照惯例的只是用model、dao和controller层，不过这次被<code>Redis</code>和<code>MyBatis</code>给双重夹击毒打，不得已使用了Service层。</p>
+<p>​        具体原因是由于MyBatis中的update标签中没有resultType属性，而Redis的@CachePut注解又需要update方法的返回值作为缓存结果。所以只能在Service层中使用cache来缓解这个尴尬。下面具体介绍一下Service层的代码。</p>
+<p>​        依照一般编码规范，小编把Service层的接口和实现分离，在Service文件夹中加了层ServiceImp文件夹，里面是Service接口的具体实现。下面具体介绍一下Service层的代码。</p>
+<p>​        首先是接口，接口编写的顺序按照CRUD的顺序来编写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interface UserService &#123;</span><br><span class="line">    void saveUser(User user);</span><br><span class="line"></span><br><span class="line">    User getUser(Long id);</span><br><span class="line"></span><br><span class="line">    List&lt;User&gt; listUser();</span><br><span class="line"></span><br><span class="line">    User updateUser(User user);</span><br><span class="line"></span><br><span class="line">    void deleteUser(Long id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    其实Service层的接口和dao层的接口基本相同，唯一不同的是<code>updateUser</code>方法的返回值，在dao层中是void，在service层中是User，因为<code>Redis</code>默认使用方法的返回值作为缓存结果。下面再介绍下该接口的实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">@CacheConfig(cacheNames=&quot;c1&quot;)</span><br><span class="line">public class UserServiceImp implements UserService &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    UserMapper userMapper;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void saveUser(User user)&#123;</span><br><span class="line">        userMapper.saveUser(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    @Cacheable</span><br><span class="line">    // 默认情况下缓存的key是方法参数，value是方法返回值</span><br><span class="line">    public User getUser(Long id)&#123;</span><br><span class="line">        return userMapper.getUser(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;User&gt; listUser()&#123;</span><br><span class="line">        return userMapper.listUser();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    @CachePut(key = &quot;#user.getId()&quot;)</span><br><span class="line">    public User updateUser(User user)&#123;</span><br><span class="line">        userMapper.updateUser(user);</span><br><span class="line">        return userMapper.getUser(user.getId());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    @CacheEvict</span><br><span class="line">    public void deleteUser(Long id)&#123;</span><br><span class="line">        userMapper.deleteUser(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        其中@CacheConfig注解使用了application.yml配置的Redis-cache名字，如果不使用该注解的话就需要在下面那些cache注解表明缓存名称了。然后分别是@Cacheable、@CachePut、@CacheEvict这几个注解，其中@Cacheable一般用于read方法，@CachePut用于update方法，@CacheEvict用于delete方法。</p>
+<p>​        默认情况下缓存的key是方法参数，缓存的value是方法返回值。如果不想使用默认的key，还可以使用蹩脚的SpEL ( Spring Experssion Language ) 语法来指定。类似在@CachePut中使用方法参数user的getId() 方法来获取<code>id</code>作为缓存的key。</p>
+<p>​        如果是属性值还可以使用<code>#user.id</code>这种形式来获取，不过由于我们的属性值一般是private的，所以该方法看看就好。</p>
+<p>​        编写好src代码之后就该编写单元测试了，service层的测试代码感觉和dao层的单元测试代码也差不多，照着github撸就行了。接下来重点介绍的controller层的集成测试。先贴下Spring集成测试的官方Guide<a href="https://spring.io/guides/gs/testing-web/，然后是对应的[SpringBoot官方文档测试章节](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing)。下面贴一下cotroller层集成测试的代码：" target="_blank" rel="noopener">https://spring.io/guides/gs/testing-web/，然后是对应的[SpringBoot官方文档测试章节](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing)。下面贴一下cotroller层集成测试的代码：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringRunner.class)</span><br><span class="line">@SpringBootTest</span><br><span class="line">@AutoConfigureMockMvc</span><br><span class="line">public class UserControllerTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private MockMvc mockMvc;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void saveUserTest() throws Exception &#123;</span><br><span class="line">        //执行perform请求</span><br><span class="line">        mockMvc.perform(post(&quot;/saveUser&quot;)</span><br><span class="line">                .param(&quot;name&quot;, &quot;dd&quot;)</span><br><span class="line">                .param(&quot;age&quot;, &quot;44&quot;)</span><br><span class="line">        )</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andDo(print());</span><br><span class="line">        //检测</span><br><span class="line">        mockMvc.perform(get(&quot;/listUser&quot;))</span><br><span class="line">                .andDo(print())</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andExpect(content().string(containsString(&quot;dd&quot;)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void getUserTest() throws Exception &#123;</span><br><span class="line">        mockMvc.perform(MockMvcRequestBuilders.get(&quot;/getUser&quot;)</span><br><span class="line">                .param(&quot;id&quot;, &quot;1&quot;)</span><br><span class="line">                .accept(MediaType.APPLICATION_JSON)//执行URL请求</span><br><span class="line">        )</span><br><span class="line">                .andDo(print())</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andExpect(jsonPath(&quot;$.name&quot;).value(&quot;aa&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void listUserTest() throws Exception &#123;</span><br><span class="line">        //使用MvcResult接收返回的数据</span><br><span class="line">        MvcResult mvcResult =  mockMvc.perform(get(&quot;/listUser&quot;))</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andReturn();</span><br><span class="line">        //将数据转换为JSONArray</span><br><span class="line">        String content = mvcResult.getResponse().getContentAsString();</span><br><span class="line">        System.out.println(&quot;Content of Response:\n&quot; + content);</span><br><span class="line">        JSONArray jsonArray = new JSONArray(content);</span><br><span class="line">        System.out.println(&quot;JSONArray\n&quot; + jsonArray);</span><br><span class="line">        Assert.assertEquals(jsonArray.length(), 3);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void updateUserTest() throws Exception &#123;</span><br><span class="line">        mockMvc.perform(put(&quot;/updateUser&quot;)</span><br><span class="line">                .param(&quot;id&quot;, &quot;3&quot;)</span><br><span class="line">                .param(&quot;name&quot;, &quot;ee&quot;)</span><br><span class="line">                .param(&quot;age&quot;, &quot;55&quot;)</span><br><span class="line">        )</span><br><span class="line">                .andDo(print())</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andExpect(jsonPath(&quot;$.name&quot;).value(&quot;ee&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    @Transactional</span><br><span class="line">    public void deleteUserTest() throws Exception &#123;</span><br><span class="line">        //先删除一个对象</span><br><span class="line">        mockMvc.perform(delete(&quot;/deleteUser&quot;)</span><br><span class="line">                .param(&quot;id&quot;, &quot;2&quot;));</span><br><span class="line">        //然后获取该id对应的对象，会发现为空</span><br><span class="line">        MvcResult mvcResult = mockMvc.perform(get(&quot;/getUser&quot;)</span><br><span class="line">                .param(&quot;id&quot;, &quot;2&quot;)</span><br><span class="line">        )</span><br><span class="line">                .andReturn();</span><br><span class="line">        //断言</span><br><span class="line">        String content = mvcResult.getResponse().getContentAsString();</span><br><span class="line">        Assert.assertEquals(&quot;&quot;, content);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        类的上面的是熟悉的@RunWith和@SpringBootTest注解，用来表明是测试类。然后是@AutoConfigureMockMvc注解，该注解用于自动配置MockMvc，使用@Autowired就可以开箱即用，对比一下之前集成测试写的代码就可以知道有多省事了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private WebApplicationContext wac;</span><br><span class="line"></span><br><span class="line">private MockMvc mockMvc;</span><br><span class="line"></span><br><span class="line">@Before</span><br><span class="line">public void setUp() throws Exception&#123;</span><br><span class="line">    //初始化MockMvc对象</span><br><span class="line">    mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        上面的是传统的SpringMVC时代的做法，而如今我们使用了@AutoConfigureMockMvc注解之后再MockMvc上面加@Autowired注解就可以替换掉上面的代码。</p>
+<p>​        MockMvc的使用流程依旧是熟悉的发起url请求(perform) –&gt; 打印( andDo(print()) ) –&gt;断言(andExpect)，在andExpect中使用jsonPath来获取key对应的value来进行断言。</p>
+<p>​        上面需要注意两个坑是perform和andExpect，perform中的url必须使用<code>\</code>，andExpect中的jsonPath中必须使用<code>$.</code>符号，不然使用的时候会报错。</p>
+<p>​        listUser中的测试方法稍微有些不同，首先是使用MvcResult来接收结果，然后将结果转换为JSONArray形式，最后JSONArray的length()来进行断言测试。这个官方文档好像没有介绍这种形式，我也是几番谷歌之后才找到的这个奇淫技巧。主要是转换成JSONArray的形式挺麻烦的。</p>
+<p>​        </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/" data-id="ck4xvebv1000amgw42zqb3gbn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">springboot集成swagger</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/SpringBoot/" style="font-size: 10px;">SpringBoot</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/">springboot集成redis-cache</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/">springboot集成swagger</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/">spirngboot集成mybatis多数据源</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/">springboot集成thymeleaf</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/">springboot集成Redis</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 lin qx<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags/SpringBoot" class="mobile-nav-link">SpringBoot</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
