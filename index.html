@@ -65,6 +65,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-SpringBoot集成RabbitMQ" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/11/SpringBoot%E9%9B%86%E6%88%90RabbitMQ/" class="article-date">
+  <time datetime="2020-01-11T14:13:18.000Z" itemprop="datePublished">2020-01-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/11/SpringBoot%E9%9B%86%E6%88%90RabbitMQ/">SpringBoot集成RabbitMQ</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​        今天小编为大家带来了RabbitMQ，首先来介绍一下RabbitMQ是什么东西。RabbitMQ是一个消息队列，类似数据库一样的中间件，用途主要是用来传递消息以及消息的暂时存储。</p>
+<p>​        不出意外先贴下代码的<a href="https://github.com/lonelyProgramMonkey/SpringBoot-demos/tree/master/springboot_RabbitMQ" target="_blank" rel="noopener">github地址</a> ，然后再来贴一下RabbitMQ的<a href="https://www.rabbitmq.com/#getstarted" target="_blank" rel="noopener">官网地址</a> ，官网中介绍了如何安装RabbitMQ以及RabbitMQ的一些教程，不过这里的官网的教程实在是太过啰嗦，没有集成SpringBoot，使得各种连接都是通过代码配置的，类似JDBC那种，所以不推荐深入学习官网的教程。</p>
+<p>​        官网推荐在windows中使用chocolatey包管理器来安装，chocolatey相当于Mac中的homebrew，不过chocolatey在国内的速度实在感人，而且chocolatey需要管理员权限，安装时也会污染环境变量。所以经过一番搜索选择了一个更好的方案scoop，scoop时类似于chocolatey的包管理器，托管在github上，而且没有上述chocolatey的缺点。</p>
+<p>​        下面贴一下<a href="https://sspai.com/post/52496" target="_blank" rel="noopener">少数派的scoop安装教程</a>，里面其实可以不用powershell，直接用git bash应该也可以，powershell的配色实在是太丑。在安装了scoop之后，我们直接用<code>scoop install rabbitmq</code>就可以直接安装RabbitMQ了，而且安装后不用配置环境变量，美滋滋~~。安装RabbitMQ后在C盘用户文件夹下找到scoop，然后进入apps -&gt; rabbitmq -&gt; 3.8.2 -&gt; sbin，找到<code>rabbitmq-server.bat</code>，双击运行RabbitMQ即可运行。等待几秒后底部出现如下字样即代表安装成功并运行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Starting broker... completed with 3 plugins.</span><br></pre></td></tr></table></figure>
+
+<p>​        这时候在浏览器中打开<a href="localhost:15672" target="_blank" rel="noopener">localhost:15672</a> 即可打开RabbitMQ的客户端，初始账号和密码都是<code>guest</code> 。推荐在桌面或其它位置建一个WinR文件夹，然后将该文件夹的路径放进Path环境中，把Redis的启动脚本快解方式和RabbitMQ的启动脚本的快捷方式都放入该文件夹中，下次就可以直接输入Win+R，然后输入对应名字就可以启动应用了。又是一个效率神器，美滋滋。Win10还真的是有不少黑魔法。</p>
+<p>​        启动RabbitMQ之后就可以开始写bug了，首先来看下Spring中RabbitMQ的官方文档，不得不吐槽官方文档RabbitMQ的东西离散碎片化，首先是Spring的<a href="https://spring.io/guides/gs/messaging-rabbitmq/" target="_blank" rel="noopener">Guide</a> ，Guide里面都是简单的demo示例，很多博客都是搬运这里的东西。然后是Spring-framework的官方文档，之后是SpringBoot的官方文档。里面都有RabbitMQ的介绍，不过都不全，而且都没有简单的示例。我的推荐是Spring的Project下的<a href="https://spring.io/projects/spring-amqp" target="_blank" rel="noopener">Spring AMQP</a>来查看里面的第二个标签的里面的官方文档。下面代码都是copy的Spring AMQP的<a href="https://docs.spring.io/spring-amqp/docs/2.2.2.RELEASE/reference/html/#_changes_in_2_2_since_2_1" target="_blank" rel="noopener">3.1节</a> 的代码，不过个人补上了注释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class DemoApplication &#123;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		SpringApplication.run(DemoApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public ApplicationRunner runner(AmqpTemplate template) &#123;</span><br><span class="line">		//lambda表达式，左边args为参数，右边为函数</span><br><span class="line">		return args -&gt; template.convertAndSend(&quot;myqueue&quot;, &quot;foo&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Bean</span><br><span class="line">	public Queue myQueue() &#123;</span><br><span class="line">		//声明queue的名字</span><br><span class="line">		return new Queue(&quot;myqueue&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	回调函数，给消息队列回调该函数</span><br><span class="line">	 */</span><br><span class="line">	@RabbitListener(queues = &quot;myqueue&quot;) //声明监听的队列</span><br><span class="line">	public void listen(String in) &#123;</span><br><span class="line">		System.out.println(in);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        不得不说官方文档逼格就是高，才这么点东西就用上了lambda和回调函数，写好该类后直接点击运行就可以在控制台底部看到<code>foo</code> 了。单元测试就不需要写了。<code>foo</code>是covertAndSend函数中的参数，左边参数是队列名，<code>foo</code>是向该队列传递的消息，然后消息队列回调listen函数（因为有@RabbitListener注解）来把该消息传入in这个参数中，之后回调该函数打印出in变量，即<code>foo</code> 。</p>
+<p>​        上述中消息队列通过回调函数实现了异步的功能，同时也实现了解耦，解耦在一对多和多对多时能极大程度地降低系统耦合度。MQ还有限流和削峰的功能，不过那是针对大流量系统而言，感兴趣可以看下<a href="https://juejin.im/post/5de3c8026fb9a07194761641" target="_blank" rel="noopener">这篇博客</a>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/11/SpringBoot%E9%9B%86%E6%88%90RabbitMQ/" data-id="ck59qbihv00005gw499vn6xzs" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-springboot集成redis-cache" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/" class="article-date">
@@ -120,7 +170,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/" data-id="ck4xvebv1000amgw42zqb3gbn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/" data-id="ck59qbiiw000d5gw44jpweteh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -185,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/" data-id="ck4xvebv3000cmgw47g952t4v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/22/springboot%E9%9B%86%E6%88%90swagger/" data-id="ck59qbii800055gw4bwcxezun" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -244,7 +294,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" data-id="ck4xvebud0002mgw4e5h6bvvb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/22/spirngboot%E9%9B%86%E6%88%90mybatis%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90/" data-id="ck59qbii300025gw41bzr2nnv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -352,7 +402,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck4xvebuy0007mgw4cexn3gk5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/" data-id="ck59qbij0000h5gw47tcs7prs" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -428,7 +478,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" data-id="ck4xvebuz0008mgw4ayfjgpjs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/" data-id="ck59qbiiu000c5gw46fik64bl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -482,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck4xvebu90001mgw4e28v20ed" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/17/SpringBoot%E9%9B%86%E6%88%90lombok%E5%92%8C%E9%85%8D%E7%BD%AEyml/" data-id="ck59qbii700045gw4142wekby" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -553,7 +603,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck4xvebv5000emgw4hnjwhvaa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/15/springboot%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" data-id="ck59qbiiy000f5gw4bfjz2ny9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringBoot/" rel="tag">SpringBoot</a></li></ul>
@@ -617,6 +667,10 @@
       <ul>
         
           <li>
+            <a href="/2020/01/11/SpringBoot%E9%9B%86%E6%88%90RabbitMQ/">SpringBoot集成RabbitMQ</a>
+          </li>
+        
+          <li>
             <a href="/2020/01/03/springboot%E9%9B%86%E6%88%90redis-cache/">springboot集成redis-cache</a>
           </li>
         
@@ -630,10 +684,6 @@
         
           <li>
             <a href="/2019/11/21/springboot%E9%9B%86%E6%88%90thymeleaf/">springboot集成thymeleaf</a>
-          </li>
-        
-          <li>
-            <a href="/2019/11/19/springboot%E9%9B%86%E6%88%90Redis/">springboot集成Redis</a>
           </li>
         
       </ul>
